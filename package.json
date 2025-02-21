@@ -1,0 +1,50 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "This is the backend code for throllerz House company",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "SET NODE_ENV=DEVELOPEMENT& nodemon server",
+    "prod": "SET NODE_ENV=PRODUCTION& nodemon server",
+    "seeder": "node backend/utils/seeder.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/venture1606/ThrottlerzHouse.git"
+  },
+  "keywords": [
+    "Backend",
+    "code"
+  ],
+  "author": "Ashraf Ahmed I",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/venture1606/ThrottlerzHouse/issues"
+  },
+  "homepage": "https://github.com/venture1606/ThrottlerzHouse#readme",
+  "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "axios": "^1.6.8",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "bootstrap": "^5.3.3",
+    "cookie-parser": "^1.4.6",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.2.0",
+    "nodemailer": "^6.9.13",
+    "nodemon": "^3.0.3",
+    "react-alert": "^7.0.3",
+    "react-alert-template-basic": "^1.0.2",
+    "react-js-pagination": "^3.0.3",
+    "react-router": "^6.22.3",
+    "react-router-dom": "^6.22.3",
+    "reactstrap": "^9.2.2",
+    "router": "^1.3.8",
+    "validator": "^13.11.0"
+  }
+}
