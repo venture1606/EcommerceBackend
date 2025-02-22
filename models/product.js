@@ -13,6 +13,12 @@ const productSchema = new mongoose.Schema({
         maxLength: [5, 'Product Price cannot exceed 5 character'],
         default: 0.0
     },
+    originalPrice: {
+        type: Number,
+        required: [true, 'Please enter product original price'],
+        maxLength: [5, 'Product Price cannot exceed 5 character'],
+        default: 0.0
+    },
     description: {
         type: String,
         required: [true, 'Please enter the Product description']
@@ -21,42 +27,34 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    images: [
-        {
-            public_id: {
-                type: String,
-                required: true
+    // need to store 5 images per product
+    images: {
+        type: [
+            {
+                public_id: {
+                    type: String,
+                    required: true
+                },
+                url: {
+                    type: String,
+                    required: true
+                }
+            }
+        ],
+        validate: {
+            validator: function (val) {
+                return val.length === 5; // Ensures exactly 5 images are stored
             },
-            url: {
-                type: String,
-                required: true
-            },
+            message: 'A product must have exactly 5 images'
         }
-    ],
+    },
     category: {
         type: String,
         required: [true, 'Please select category for this product'],
-        enum: {
-            values: [
-                'Electronics',
-                'Camera',
-                'Laptop',
-                'Accessories',
-                'Headphones',
-                'Food',
-                'Books',
-                'Clothes/Shoes',
-                'Beauty/Health',
-                'Sports',
-                'Outdoor',
-                'Home'
-            ],
-            message: 'Please select correct category for product'
-        }
     },
-    seller: {
+    brand: {
         type: String,
-        required: [true, 'Please enter product seller']
+        required: [true, 'Please enter product brand']
     },
     stock: {
         type: Number,
@@ -86,6 +84,10 @@ const productSchema = new mongoose.Schema({
             comment: {
                 type: String,
                 required: true
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now
             }
         }
     ],

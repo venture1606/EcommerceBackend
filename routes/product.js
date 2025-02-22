@@ -18,10 +18,10 @@ router.route('/products').get(getProduct);
 router.route('/product/:id').get(getSingleProduct);
 
 
-router.route('/admin/product/new').post(isAuthenticatedUser, authorizeRoles('admin', 'seller'), newProduct);
+router.route('/admin/product/new').post(isAuthenticatedUser, authorizeRoles('admin', 'member'), newProduct);
 router.route('/admin/product/:id')
-.put(isAuthenticatedUser, authorizeRoles('admin', 'seller'), updateProduct)
-.delete(isAuthenticatedUser, authorizeRoles('admin', 'seller'), deleteProduct);
+.put(isAuthenticatedUser, authorizeRoles('admin', 'member'), updateProduct)
+.delete(isAuthenticatedUser, authorizeRoles('admin', 'member'), deleteProduct);
 
 router.route('/review').put(isAuthenticatedUser, createProductReview)
 router.route('/reviews').get(isAuthenticatedUser, getReviews)

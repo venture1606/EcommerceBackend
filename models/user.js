@@ -32,6 +32,14 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     },
+    bikeName:{
+        type: String,
+        required: [true, 'Please enter your bike name']
+    },
+    phone: {
+        type: Number,
+        required: [true, 'Please enter your phone number'],
+    },
     role:{
         type: String,
         default: 'user'

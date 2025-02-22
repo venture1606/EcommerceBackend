@@ -10,6 +10,10 @@ exports.newProduct = catchAsyncError(async (req, res, next) => {
     // console.log(Object.getOwnPropertyNames(req.user.id));
     req.body.user = req.user.id
 
+    if (!req.body.name || !req.body.description || !req.body.category || !req.body.stock || !req.body.brand || !req.body.images || !req.body.price || !req.body.originalPrice){
+        return next(new errorHandler('Enter all the fields', 400))
+    }
+
     const product = await Product.create(req.body);
     res.status(201).json({
         success: true,

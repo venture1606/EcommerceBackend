@@ -19,7 +19,8 @@ app.use(cookieParser())
 
 const products = require('./routes/product');
 const auth = require('./routes/auth');
-const order = require('./routes/order')
+const order = require('./routes/order');
+const category = require('./routes/category');
 
 // print hello for the url
 app.get('/', (req, res) => {
@@ -29,6 +30,7 @@ app.get('/', (req, res) => {
 app.use('/api/v1', products)
 app.use('/api/v1', auth)
 app.use('/api/v1', order)
+app.use('/api/v1', category)
 
 app.use(errorMiddleWare)
 

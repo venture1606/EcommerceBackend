@@ -7,16 +7,18 @@ const sendEmail = require('../utils/sendEmail');
 const crypto = require('crypto');
 
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-    const {name, email, password} = req.body;
+    const {name, email, password, bikeName, phone} = req.body;
 
     const user = await User.create({
         name,
         email,
         password,
+        bikeName,
+        phone,
         avatar: {
             public_id: 'avatars/kccvibpsuiusmwfepb3m',
-            url: 'https://res.cloudinary.com/shopit/image/upload/v1606305757/avatars/kccvibpsuiusmwfepb3m.png'
-        }
+            url: 'https://www.366icons.com/media/01/profile-avatar-account-icon-16699.png'
+        },
     })
 
    sendToken(user, 200, res);
