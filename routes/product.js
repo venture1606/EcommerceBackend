@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router();
+const upload = require('../Middleware/upload');
 
 const { 
     getProduct, 
@@ -18,7 +19,7 @@ router.route('/products').get(getProduct);
 router.route('/product/:id').get(getSingleProduct);
 
 
-router.route('/admin/product/new').post(isAuthenticatedUser, authorizeRoles('admin', 'member'), newProduct);
+router.route('/admin/product/new').post(isAuthenticatedUser, authorizeRoles('admin', 'member'), upload.array('images', 5), newProduct);
 router.route('/admin/product/:id')
 .put(isAuthenticatedUser, authorizeRoles('admin', 'member'), updateProduct)
 .delete(isAuthenticatedUser, authorizeRoles('admin', 'member'), deleteProduct);

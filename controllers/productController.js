@@ -3,24 +3,53 @@ const Product = require('../models/product')
 const errorHandler = require('../utils/errorHandler')
 const catchAsyncError = require('../Middleware/catchAsyncError')
 const APIFeatures = require('../utils/apiFeatures')
+const cloudinary = require('../utils/cloudinary')
 
 
 // Create a new product => /api/v1/product/new
 exports.newProduct = catchAsyncError(async (req, res, next) => {
-    // console.log(Object.getOwnPropertyNames(req.user.id));
-    req.body.user = req.user.id
 
-    if (!req.body.name || !req.body.description || !req.body.category || !req.body.stock || !req.body.brand || !req.body.images || !req.body.price || !req.body.originalPrice){
-        return next(new errorHandler('Enter all the fields', 400))
+    // Ensure exactly 5 images are uploaded
+    if (!req.files || req.files.length !== 5) {
+        return next(new errorHandler('Please upload exactly 5 images', 400));
     }
 
+    req.body.user = req.user.id;
+
+    // Validate required fields
+    if (!req.body.name || !req.body.description || !req.body.category || !req.body.stock || 
+        !req.body.brand || !req.body.price || !req.body.originalPrice) {
+        return next(new errorHandler('Enter all required fields', 400));
+    }
+
+    // Upload images to Cloudinary
+    let uploadedImages = [];
+    for (let file of req.files) {
+        const result = await cloudinary.uploader.upload(file.path, {
+            folder: "products",
+            width: 500,
+            crop: "scale"
+        });
+
+        uploadedImages.push({
+            public_id: result.public_id,
+            url: result.secure_url
+        });
+    }
+
+    // Assign uploaded images to the request body
+    req.body.images = uploadedImages;
+
+    // Create the product
     const product = await Product.create(req.body);
+
     res.status(201).json({
         success: true,
-        message: "This is a message",
+        message: "Product added successfully",
         product
-    })
-})
+    });
+});
+
 
 exports.getProduct = catchAsyncError( async (req, res, next) => {
     const resPerPage = 3;

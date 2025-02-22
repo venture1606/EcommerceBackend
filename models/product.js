@@ -56,6 +56,10 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please enter product brand']
     },
+    model:{
+        type: String,
+        required: [true, 'Please enter product model']
+    },
     stock: {
         type: Number,
         required: [true, 'Plese enter the product stock'],
@@ -66,31 +70,6 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    reviews: [
-        {
-            user: {
-                type: mongoose.Schema.ObjectId,
-                ref: 'User',
-                required: true
-            },
-            name: {
-                type: String,
-                required: true
-            },
-            rating: {
-                type: Number,
-                required: true
-            },
-            comment: {
-                type: String,
-                required: true
-            },
-            createdAt: {
-                type: Date,
-                default: Date.now
-            }
-        }
-    ],
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',

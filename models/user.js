@@ -44,6 +44,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'user'
     },
+    wishlist: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Product",  // Reference to ProductSchema
+        }
+    ],
+    cart: [
+        {
+            product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+            quantity: { type: Number, default: 1 }  // Quantity for cart items
+        }
+    ],
     createAt:{
         type: Date,
         default: Date.now
