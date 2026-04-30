@@ -12,9 +12,17 @@ exports.isAuthenticatedUser = catchAsyncErrors( async (req, res, next) => {
         return next(new ErrorHandler ('Login First to access this resource', 401))
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    // console.log(decoded);
-    req.user = await User.findById(decoded.id)
+    let decoded;
+    try {
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+        return next(new ErrorHandler('Invalid or expired token. Please login again.', 401));
+    }
+
+    req.user = await User.findById(decoded.id);
+    if (!req.user) {
+        return next(new ErrorHandler('User belonging to this token no longer exists.', 401));
+    }
     next()
 })
 
