@@ -50,7 +50,6 @@ exports.newProduct = catchAsyncError(async (req, res, next) => {
     });
 });
 
-
 exports.getProduct = catchAsyncError( async (req, res, next) => {
     const resPerPage = 3;
     const productsCount = await Product.countDocuments();

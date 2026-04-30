@@ -80,3 +80,18 @@ exports.deleteCategory = catchAsyncErrors( async (req, res, next) => {
         message: 'Category is deleted'
     })
 })
+
+// Get single category details => /api/v1/category/:id
+exports.getSingleCategory = catchAsyncErrors( async (req, res, next) => {
+    const category = await Category.findById(req.params.id);
+
+    if (!category){
+        return next(new ErrorHandler('Category not found', 404))
+    }
+
+    res.status(200).json({
+        success: true,
+        category
+    })
+})
+

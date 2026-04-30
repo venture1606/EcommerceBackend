@@ -27,7 +27,6 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    // need to store 5 images per product
     images: {
         type: [
             {
@@ -70,6 +69,27 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    reviews: [
+        {
+            user: {
+                type: mongoose.Schema.ObjectId,
+                ref: 'User',
+                required: true
+            },
+            name: {
+                type: String,
+                required: true
+            },
+            rating: {
+                type: Number,
+                required: true
+            },
+            comment: {
+                type: String,
+                required: true
+            }
+        }
+    ],
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',

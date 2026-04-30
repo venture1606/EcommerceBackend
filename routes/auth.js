@@ -13,10 +13,16 @@ const {
     updateProfile,
     allUsers,
     updateUser,
-    deleteUser
+    deleteUser,
+    addToCart,
+    getCartItems,
+    removeFromCart,
+    wishlist,
+    getWishlist,
+    removeFromWishlist
 } = require('../controllers/authController')
 
-const {isAuthenticatedUser, authorizeRoles} = require('../Middleware/auth')
+const { isAuthenticatedUser, authorizeRoles } = require('../Middleware/auth')
 
 router.route('/register').post(registerUser);
 router.route('/login').post(loginUser);
@@ -31,5 +37,13 @@ router.route('/admin/user/:id')
     .get(isAuthenticatedUser, authorizeRoles('admin'), getUserDetail)
     .put(isAuthenticatedUser, authorizeRoles('admin'), updateUser)
     .delete(isAuthenticatedUser, authorizeRoles('admin'), deleteUser)
+
+router.route('/cart').post(isAuthenticatedUser, addToCart);
+router.route('/cart/items').get(isAuthenticatedUser, getCartItems);
+router.route('/cart/remove').delete(isAuthenticatedUser, removeFromCart);
+
+router.route('/wishlist').post(isAuthenticatedUser, wishlist);
+router.route('/wishlist/items').get(isAuthenticatedUser, getWishlist);
+router.route('/wishlist/remove').delete(isAuthenticatedUser, removeFromWishlist);
 
 module.exports = router;

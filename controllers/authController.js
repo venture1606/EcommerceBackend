@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const Product = require('../models/product');
 
 const ErrorHandler = require('../utils/errorHandler')
 const catchAsyncErrors = require('../Middleware/catchAsyncError');
@@ -218,3 +219,176 @@ exports.deleteUser = catchAsyncErrors( async (req, res, next) => {
         message: 'User successfully removed'
     })    
 })
+
+// Adding the product in the cart list
+exports.addToCart = catchAsyncErrors(async (req, res, next) => {
+    const { productId, quantity = 1 } = req.body;
+
+    if (!productId) {
+        return next(new ErrorHandler('Product ID is required', 400));
+    }
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+        return next(new ErrorHandler('User not found', 404));
+    }
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+        return next(new ErrorHandler('Product not found', 404));
+    }
+
+    const existingCartItem = user.cart.find(
+        (item) => item.product.toString() === productId
+    );
+
+    if (existingCartItem) {
+        // Check if stock allows increasing quantity
+        if (product.stock < existingCartItem.quantity + 1) {
+            return next(new ErrorHandler('Not enough stock to add more', 400));
+        }
+        existingCartItem.quantity += 1; // increase quantity by 1
+    } else {
+        // Check stock before adding new
+        if (product.stock < quantity) {
+            return next(new ErrorHandler('Product is out of stock', 400));
+        }
+
+        const cartItem = {
+            product: productId,
+            quantity
+        };
+
+        user.cart.push(cartItem);
+    }
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'Product added to cart successfully',
+        user: user
+    });
+});
+
+exports.getCartItems = catchAsyncErrors(async (req, res, next) => {
+    const user = await User.findById(req.user.id).populate('cart.product');
+
+    if (!user) {
+        return next(new ErrorHandler('User not found', 404));
+    }
+
+    res.status(200).json({
+        success: true,
+        user: user
+    });
+});
+
+// removing the product from the cart list
+exports.removeFromCart = catchAsyncErrors(async (req, res, next) => {
+    const { productId } = req.body;
+
+    if (!productId) {
+        return next(new ErrorHandler('Product ID is required', 400));
+    }
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+        return next(new ErrorHandler('User not found', 404));
+    }
+
+    const cartItemIndex = user.cart.findIndex(item => item.product.toString() === productId);
+
+    if (cartItemIndex === -1) {
+        return next(new ErrorHandler('Product not found in cart', 404));
+    }
+
+    console.log('Cart item index:', cartItemIndex);
+
+    user.cart.splice(cartItemIndex, 1);
+
+    console.log('Updated cart:', user.cart);
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'Product removed from cart successfully',
+        cart: user.cart
+    });
+});
+
+exports.wishlist = catchAsyncErrors(async (req, res, next) => {
+    const { productId } = req.body;
+
+    if (!productId) {
+        return next(new ErrorHandler('Product ID is required', 400));
+    }
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+        return next(new ErrorHandler('User not found', 404));
+    }
+
+    if (user.wishlist.includes(productId)) {
+        return next(new ErrorHandler('Product already in wishlist', 400));
+    }
+
+    if (typeof productId === 'string' && productId.trim() !== '') {
+        user.wishlist.push(productId);
+    }
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'Product added to wishlist successfully',
+        user: user
+    });
+});
+
+exports.getWishlist = catchAsyncErrors(async (req, res, next) => {
+    const user = await User.findById(req.user.id).populate('wishlist');
+
+    if (!user) {
+        return next(new ErrorHandler('User not found', 404));
+    }
+
+    res.status(200).json({
+        success: true,
+        user: user
+    });
+});
+
+exports.removeFromWishlist = catchAsyncErrors(async (req, res, next) => {
+    const { productId } = req.body;
+
+    if (!productId) {
+        return next(new ErrorHandler('Product ID is required', 400));
+    }
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+        return next(new ErrorHandler('User not found', 404));
+    }
+
+    const wishlistIndex = user.wishlist.findIndex(item => item.toString() === productId);
+
+    if (wishlistIndex === -1) {
+        return next(new ErrorHandler('Product not found in wishlist', 404));
+    }
+
+    user.wishlist.splice(wishlistIndex, 1);
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'Product removed from wishlist successfully',
+        user: user
+    });
+});
