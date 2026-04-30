@@ -6,7 +6,7 @@ const errorMiddleWare = require('./Middleware/errors');
 
 // Use CORS middleware
 app.use(cors({
-    origin: ['https://scrap-basic-pattern.web.app', 'https://e-commerce-one-bay-30.vercel.app/', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3008'], // Add all your frontend URLs
+    origin: ['https://e-commerce-one-bay-30.vercel.app', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3008'], // Add all your frontend URLs
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
